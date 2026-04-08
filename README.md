@@ -24,11 +24,11 @@ A full-stack task management application built with React, NestJS, and MySQL.
 ## Setup
 
 ### Backend
-cd task-manager-backend
-npm install
-npm run start:dev
+- cd task-manager-backend
+- npm install
+- npm run start:dev
 
 ### Frontend
-cd task-manager-frontend
-npm install
-npm run dev
+- cd task-manager-frontend
+- npm install
+- npm run dev
