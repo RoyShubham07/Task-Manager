@@ -12,16 +12,22 @@ import { TasksModule } from './tasks/tasks.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        type: 'mysql' as const,
-        host: config.get<string>('DB_HOST', 'localhost'),
-        port: parseInt(config.get<string>('DB_PORT') ?? '3306', 10),
-        username: config.get<string>('DB_USERNAME', 'root'),
-        password: config.get<string>('DB_PASSWORD', ''),
-        database: config.get<string>('DB_DATABASE', 'task_manager'),
-        entities: [Project, Task],
-        synchronize: true,
-      }),
+      useFactory: (config: ConfigService) => {
+        const useSsl = config.get<string>('DB_SSL') === 'true';
+        return {
+          type: 'mysql' as const,
+          host: config.get<string>('DB_HOST', 'localhost'),
+          port: parseInt(config.get<string>('DB_PORT') ?? '3306', 10),
+          username: config.get<string>('DB_USERNAME', 'root'),
+          password: config.get<string>('DB_PASSWORD', ''),
+          database: config.get<string>('DB_DATABASE', 'task_manager'),
+          entities: [Project, Task],
+          synchronize: true,
+          ...(useSsl
+            ? { ssl: { rejectUnauthorized: false } }
+            : {}),
+        };
+      },
     }),
     ProjectsModule,
     TasksModule,
